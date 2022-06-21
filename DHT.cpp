@@ -77,7 +77,7 @@ void DHT::begin(uint8_t usec) {
  *  @param  S
  *          Scale. Boolean value:
  *					- true = Fahrenheit
- *					- false = Celcius
+ *					- false = Celsius
  *  @param  force
  *          true if in force mode
  *	@return Temperature value in selected scale
@@ -89,7 +89,7 @@ float DHT::readTemperature(bool S, bool force) {
     switch (_type) {
     case DHT11:
       f = data[2];
-      if (data[3] & 0x80) {
+      if (data[2] & 0x80) { /* See: https://en.wikipedia.org/wiki/Two%27s_complement */
         f = -1 - f;
       }
       f += (data[3] & 0x0f) * 0.1;
@@ -124,18 +124,18 @@ float DHT::readTemperature(bool S, bool force) {
 }
 
 /*!
- *  @brief  Converts Celcius to Fahrenheit
+ *  @brief  Converts Celsius to Fahrenheit
  *  @param  c
- *					value in Celcius
+ *					value in Celsius
  *	@return float value in Fahrenheit
  */
 float DHT::convertCtoF(float c) { return c * 1.8 + 32; }
 
 /*!
- *  @brief  Converts Fahrenheit to Celcius
+ *  @brief  Converts Fahrenheit to Celsius
  *  @param  f
  *					value in Fahrenheit
- *	@return float value in Celcius
+ *	@return float value in Celsius
  */
 float DHT::convertFtoC(float f) { return (f - 32) * 0.55555; }
 
@@ -167,7 +167,7 @@ float DHT::readHumidity(bool force) {
  *  @brief  Compute Heat Index
  *          Simplified version that reads temp and humidity from sensor
  *  @param  isFahrenheit
- * 					true if fahrenheit, false if celcius
+ * 					true if fahrenheit, false if celsius
  *(default true)
  *	@return float heat index
  */
@@ -186,7 +186,7 @@ float DHT::computeHeatIndex(bool isFahrenheit) {
  *  @param  percentHumidity
  *          humidity in percent
  *  @param  isFahrenheit
- * 					true if fahrenheit, false if celcius
+ * 					true if fahrenheit, false if celsius
  *	@return float heat index
  */
 float DHT::computeHeatIndex(float temperature, float percentHumidity,
